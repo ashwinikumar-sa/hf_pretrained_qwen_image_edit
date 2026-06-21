@@ -1,0 +1,2 @@
+**AWS Trainium** is a family of purpose-built AI accelerators from AWS — Trainium1, Trainium2, and Trainium3 — designed to deliver scalable performance and cost efficiency for training and inference 
+across a broad range of AI workloads. Here we'll compile and deploy a **Qwen-Image-Edit-2511** model entirely on an AWS Trainium2 powered Trn2.48xlarge instance. Every component of the pipeline (text encoder, diffusion transformer, VAE) runs on AWS Neuron cores, with no GPUs required
