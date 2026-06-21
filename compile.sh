@@ -66,7 +66,7 @@ echo ""
 STEP1_START=$(date +%s)
 ts "[Step 1/3] Compiling VAE (encoder + decoder, tile: ${VAE_TILE_SIZE}x${VAE_TILE_SIZE}, bfloat16)..."
 echo "  Using modified VAE with 'nearest' interpolation (Neuron doesn't support 'nearest-exact')"
-python neuron_qwen_image_edit/compile_vae.py \
+python compile_vae.py \
     --height ${VAE_TILE_SIZE} \
     --width ${VAE_TILE_SIZE} \
     --temporal_frames 1 \
@@ -81,7 +81,7 @@ echo ""
 STEP2A_START=$(date +%s)
 ts "[Step 2a/3] Compiling Transformer V3 CFG (TP=16, DP=2, world_size=32, bfloat16, NKI Flash Attention)..."
 echo "  24 attention heads padded to 32 → 2 heads/rank"
-python neuron_qwen_image_edit/compile_transformer_v3_cfg.py \
+python compile_transformer_v3_cfg.py \
     --height ${HEIGHT} \
     --width ${WIDTH} \
     --tp_degree ${TP_DEGREE} \
@@ -98,7 +98,7 @@ echo ""
 STEP2B_START=$(date +%s)
 ts "[Step 2b/3] Compiling Language Model (TP=4, world_size=32, bfloat16)..."
 echo "  TP=4: perfect GQA fit (28Q/4=7 heads/rank, 4KV/4=1 head/rank)"
-python neuron_qwen_image_edit/compile_language_model_v3.py \
+python compile_language_model_v3.py \
     --max_sequence_length ${MAX_SEQ_LEN} \
     --batch_size ${BATCH_SIZE} \
     --world_size 32 \
@@ -113,7 +113,7 @@ STEP3_START=$(date +%s)
 ts "[Step 3/3] Compiling Vision Encoder (TP=4, world_size=32, float32)..."
 echo "  TP=4 is max: MLP intermediate size (3420) not divisible by 8"
 echo "  float32 precision required for accuracy"
-python neuron_qwen_image_edit/compile_vision_encoder_v3.py \
+python compile_vision_encoder_v3.py \
     --image_size ${IMAGE_SIZE} \
     --world_size 32 \
     --compiled_models_dir ${COMPILED_MODELS_DIR} \
