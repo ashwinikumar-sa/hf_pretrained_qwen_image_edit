@@ -4,3 +4,5 @@ accelerate
 qwen-vl-utils
 torchvision
 pillow
+fastapi
+uvicorn
